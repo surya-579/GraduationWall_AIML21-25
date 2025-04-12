@@ -1,0 +1,347 @@
+/* Styles specific to the photo-wall component */
+
+.grid-container {
+    flex-grow: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Needed for edge fade pseudo-elements */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Edge Fading Overlays (relative to grid-container) */
+  .grid-container::before,
+  .grid-container::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 50px; /* Adjust height of fade */
+    z-index: 5; /* Above grid but below sticky header */
+    pointer-events: none; /* Allow clicks through */
+  }
+  
+  .grid-container::before {
+    top: 0; /* Fade at the top */
+    /* Use the CSS variable defined in global styles.css */
+    background: linear-gradient(to bottom, var(--netflix-black) 0%, rgba(20, 20, 20, 0) 100%);
+  }
+  
+  .grid-container::after {
+    bottom: 0; /* Fade at the bottom */
+    background: linear-gradient(to top, var(--netflix-black) 0%, rgba(20, 20, 20, 0) 100%);
+  }
+  
+  /* Loading/Error states */
+  .loading-indicator,
+  .error-message {
+    padding: 40px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-color-dark);
+  }
+  .error-message {
+    color: var(--netflix-red);
+  }
+  
+  
+  #shuffleBtn {
+    background-color: var(--netflix-red);
+    color: var(--text-color-light);
+    border: none;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    position: relative; /* Ensure button is above pseudo-elements */
+    z-index: 10;
+  }
+  
+  #shuffleBtn:hover {
+    background-color: #ff202a;
+    transform: scale(1.05);
+  }
+  
+  .grid {
+    display: grid;
+    width: 100%;
+    max-width: 1600px; /* Optional: Limit max width */
+    margin: 0 auto; /* Center grid if max-width is set */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+    align-items: start;
+    position: relative; /* Needed for z-index relative to fades */
+    z-index: 1;
+  }
+  
+  .grid img {
+    display: block;
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    aspect-ratio: 1 / 1; /* Make images square initially */
+    object-fit: cover; /* Cover the square area */
+    border-radius: 4px;
+    background-color: rgba(50, 50, 50, 0.5); /* Placeholder background */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    /* Initial animation state handled by GSAP */
+    opacity: 0; /* Start hidden, GSAP will fade in */
+    transition: transform 0.3s cubic-bezier(0.5, 0, 0.1, 1) 0.1s,
+                box-shadow 0.2s ease-out,
+                filter 0.2s ease; /* Added filter transition */
+    will-change: transform, box-shadow, opacity, filter;
+    cursor: pointer;
+    backface-visibility: hidden;
+  }
+  
+  .grid img:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 15px 5px rgba(229, 9, 20, 0.4);
+    z-index: 5; /* Bring above other grid items on hover */
+    position: relative; /* Needed for z-index */
+  }
+  
+  /* Style for images that failed to load */
+  .grid img.error-image {
+    display: none; /* Hide images that errored */
+  }
+  
+  
+  /* Lightbox Modal Styles (Copied from global, scoped here) */
+  .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      /* display: none; */ /* Controlled by *ngIf now */
+      display: flex; /* Added back for flex alignment */
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      /* opacity: 0; */ /* Controlled by GSAP/CSS Transitions */
+      /* Add a transition for smooth fade if not using GSAP for lightbox */
+      transition: opacity 0.3s ease-in-out;
+  }
+  
+  .modal-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  .modal-image {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--text-color-light);
+      border: none;
+      font-size: 2rem;
+      padding: 5px 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      line-height: 1;
+      transition: background-color 0.2s ease;
+  }
+  .modal-close:hover {
+      background-color: rgba(229, 9, 20, 0.7);
+  }
+
+
+
+
+
+
+
+  /* ---------------------- */
+
+
+
+
+
+
+
+
+  .modal-overlay {
+    /* (Keep existing overlay styles: position, top, left, width, height, bg, display, align, justify, z-index, transition) */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease-in-out;
+    padding: 20px; /* Add padding for smaller screens */
+    box-sizing: border-box;
+}
+
+.modal-content {
+    position: relative; /* Needed for absolute positioning of close button */
+    background-color: var(--netflix-black); /* Give modal a background */
+    color: var(--text-color-light);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    max-width: 90vw;   /* Max width relative to viewport */
+    width: 1000px; /* Adjust desired fixed max width */
+    max-height: 85vh;  /* Max height relative to viewport */
+    overflow: hidden; /* Hide overflow initially */
+    display: flex;     /* Use flexbox for columns */
+    align-items: stretch; /* Make columns same height */
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(30, 30, 30, 0.7); /* Slightly different bg */
+    color: var(--text-color-light);
+    border: none;
+    font-size: 1.8rem; /* Adjust size */
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 36px; /* Center the 'x' */
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    z-index: 10; /* Above content */
+}
+.modal-close:hover {
+    background-color: var(--netflix-red);
+    transform: scale(1.1);
+}
+
+.modal-image-container {
+    flex: 0 0 55%; /* Image takes up 55% of width, doesn't grow/shrink */
+    background-color: #000; /* Black background for image area */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Hide potential overflow if image is too big */
+}
+
+.modal-image {
+    display: block; /* Remove extra space below image */
+    max-width: 100%;
+    max-height: 85vh; /* Limit height based on viewport */
+    object-fit: contain; /* Scale image while preserving aspect ratio */
+    border-radius: 0; /* Remove radius if it's inside container */
+    box-shadow: none; /* Remove shadow if inside container */
+}
+
+.modal-details-container {
+    flex: 1 1 auto; /* Takes remaining space, can grow/shrink */
+    padding: 30px 40px; /* Add padding */
+    overflow-y: auto; /* Allow details to scroll if they overflow */
+    box-sizing: border-box;
+    scrollbar-width: thin; /* Consistent scrollbar */
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+.modal-details-container::-webkit-scrollbar {
+    width: 8px;
+}
+.modal-details-container::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 4px;
+}
+.modal-details-container::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+
+.modal-name {
+    font-family: var(--header-font);
+    font-size: clamp(1.8rem, 3vw, 2.5rem); /* Responsive font size */
+    color: var(--netflix-red);
+    margin-top: 0;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.modal-quote {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text-color-dark);
+    margin: 0 0 25px 0;
+    padding-left: 15px;
+    border-left: 3px solid var(--netflix-red);
+}
+
+.modal-skills h3 {
+    font-size: 1.2rem;
+    color: var(--text-color-light);
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+}
+
+.modal-skills ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow skills to wrap */
+    gap: 8px; /* Space between skill tags */
+}
+
+.modal-skills li {
+    background-color: #333;
+    color: var(--text-color-light);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .modal-content {
+        flex-direction: column; /* Stack columns vertically */
+        max-height: 90vh; /* Adjust max height */
+        max-width: 95vw;
+        width: auto; /* Allow width to adjust */
+    }
+
+    .modal-image-container {
+        flex: 0 0 auto; /* Don't control flex basis */
+        max-height: 50vh; /* Limit image height */
+    }
+
+    .modal-image {
+       max-height: 50vh; /* Match container */
+    }
+
+    .modal-details-container {
+        padding: 20px; /* Reduce padding */
+        flex-grow: 1; /* Allow details to take remaining space */
+         max-height: 40vh; /* Example max height for details */
+    }
+
+    .modal-name {
+        font-size: 1.6rem;
+    }
+
+    .modal-quote {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+}

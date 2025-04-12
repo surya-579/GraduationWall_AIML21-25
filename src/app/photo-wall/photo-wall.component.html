@@ -1,0 +1,82 @@
+<!-- <p>photo-wall works!</p> -->
+<!-- Subtle Background Layer (Handled globally via styles.css) -->
+<!-- <div class="background-overlay"></div> -->
+
+<!-- Main Header (Consider moving to app.component.html for global layout) -->
+<!--
+<header class="main-header">
+  <h1>AIML 2025</h1>
+</header>
+-->
+<main class="grid-container">
+
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading" class="loading-indicator">Loading Photos...</div>
+  
+    <!-- Error Message -->
+    <div *ngIf="loadError" class="error-message">{{ loadError }}</div>
+  
+    <!-- Shuffle Button (Only show if not loading and no error) -->
+    <button
+      *ngIf="!isLoading && !loadError && imageElements.length >= 2"
+      id="shuffleBtn"
+      title="Shuffle all images"
+      (click)="shuffleImages()">Shuffle
+    </button>
+  
+    <!-- Photo Grid -->
+    <div *ngIf="!isLoading && !loadError && imageElements.length > 0" class="grid" id="photoWall">
+      <!--
+        Loop through imageElements data.
+        Use trackById for better performance.
+        Bind src, alt, etc.
+        Add (error) event handler.
+        Add (click) handler for lightbox.
+        Add template reference variable #imgElement
+        Add data-id attribute for mapping back to data item
+      -->
+     <!-- ... (previous template code above the grid) ... -->
+  
+    <img
+      *ngFor="let imageItem of imageElements; trackBy: trackById"
+      #imgElement
+      [src]="getImageSrc(imageItem.file)"
+      [alt]="imageItem.alt"
+      [attr.data-id]="imageItem.id"
+      loading="lazy"
+      [class.error-image]="imageItem.error"
+      (error)="onImageError(imageItem)"
+      (click)="!imageItem.error && showLightbox(imageItem)"> <!-- UPDATE: Pass whole imageItem -->
+  </div>
+
+</main>
+
+<!-- Lightbox Modal -->
+<div class="modal-overlay" *ngIf="isLightboxVisible" (click)="onLightboxOverlayClick($event)">
+  <!-- UPDATE: Restructured modal-content -->
+  <div class="modal-content">
+
+    <!-- Close Button (moved inside content for better positioning control) -->
+    <button class="modal-close" (click)="hideLightbox()">×</button>
+
+    <!-- Left Column: Image -->
+    <div class="modal-image-container">
+      <img class="modal-image" [src]="lightboxImageUrl" [alt]="lightboxSelectedName || 'Enlarged Graduate Photo'">
+    </div>
+
+    <!-- Right Column: Details -->
+    <div class="modal-details-container">
+      <h2 class="modal-name" *ngIf="lightboxSelectedName">{{ lightboxSelectedName }}</h2>
+      <blockquote class="modal-quote" *ngIf="lightboxSelectedQuote">
+        "{{ lightboxSelectedQuote }}"
+      </blockquote>
+      <div class="modal-skills" *ngIf="lightboxSelectedSkills && lightboxSelectedSkills.length > 0">
+        <h3>Skills:</h3>
+        <ul>
+          <li *ngFor="let skill of lightboxSelectedSkills">{{ skill }}</li>
+        </ul>
+      </div>
+    </div>
+
+  </div> <!-- End modal-content -->
+</div> <!-- End modal-overlay -->
